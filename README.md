@@ -194,16 +194,6 @@ Ce projet évoluera au fil des TPs pour inclure :
 - Structure des pages
 - Buffer manager
 
-### TP3 - Structures de données
-- B+ arbres
-- Index
-- Catalogues
-
-### TP4 - Requêtes
-- Parser SQL simplifié
-- Exécuteur de requêtes
-- Jointures
-
 ## Problèmes connus
 
 - Aucun problème connu pour cette version TP1
