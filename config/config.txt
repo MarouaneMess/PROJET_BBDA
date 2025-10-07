@@ -1,0 +1,9 @@
+# Configuration du MiniSGBDR
+# Format : paramètre = valeur
+
+# Chemin vers le dossier de données
+dbpath = ./DB
+# Taille d'une page (en octets)
+pagesize = 4096
+# Nombre maximal de fichiers Datax.bin
+dm_maxfilecount = 16
