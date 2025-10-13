@@ -33,6 +33,10 @@ public class DBConfigTest {
         testToString();
         testEquals();
         
+        // Tests TP3: nouveaux paramètres BufferManager
+        testConstructorWithBM();
+        testLoadFileWithBMParams();
+        
         // Résumé des tests
         System.out.println("\n=== Résumé des tests ===");
         System.out.println("Tests exécutés : " + testsExecuted);
@@ -276,6 +280,44 @@ public class DBConfigTest {
             } else {
                 System.out.println("✗ FAILED : equals ne fonctionne pas correctement");
             }
+        } catch (Exception e) {
+            System.out.println("✗ FAILED : " + e.getMessage());
+        }
+        System.out.println();
+    }
+    
+    private static void testConstructorWithBM() {
+        System.out.println("Test : Constructeur avec bm_buffercount et bm_policy");
+        testsExecuted++;
+        try {
+            DBConfig cfg = new DBConfig("./db", 1024, 8, 3, "MRU");
+            if (cfg.getBm_buffercount() == 3 && "MRU".equals(cfg.getBm_policy())) {
+                System.out.println("✓ PASSED");
+                testsPassed++;
+            } else {
+                System.out.println("✗ FAILED : valeurs bm incorrectes");
+            }
+        } catch (Exception e) {
+            System.out.println("✗ FAILED : " + e.getMessage());
+        }
+        System.out.println();
+    }
+    
+    private static void testLoadFileWithBMParams() {
+        System.out.println("Test : Chargement fichier avec bm_* ");
+        testsExecuted++;
+        try {
+            String content = "dbpath=./db\n" +
+                    "pagesize=512\n" +
+                    "dm_maxfilecount=5\n" +
+                    "bm_buffercount=4\n" +
+                    "bm_policy=MRU\n";
+            String tempFile = createTempPropertiesFile(content);
+            DBConfig cfg = DBConfig.LoadDBConfig(tempFile);
+            Files.deleteIfExists(Paths.get(tempFile));
+            boolean ok = cfg.getPagesize()==512 && cfg.getDm_maxfilecount()==5 && cfg.getBm_buffercount()==4 && "MRU".equals(cfg.getBm_policy());
+            if (ok) { System.out.println("✓ PASSED"); testsPassed++; }
+            else System.out.println("✗ FAILED : valeurs lues incorrectes");
         } catch (Exception e) {
             System.out.println("✗ FAILED : " + e.getMessage());
         }

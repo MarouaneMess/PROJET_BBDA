@@ -1,4 +1,49 @@
-# Guide de démarrage rapide - MiniSGBDR
+# Quickstart
+
+Ce projet est un MiniSGBDR Java sans outil de build. Des scripts `.bat` (Windows) et `.sh` (Unix) sont fournis.
+
+## Prérequis
+- Java JDK 8+ dans le PATH
+- Shell:
+  - Windows: cmd.exe (les `.bat`), PowerShell peut lancer les `.bat`
+  - Unix/macOS: bash/sh
+
+## Compiler
+- Windows:
+  - scripts\\compile.bat
+- Unix/macOS:
+  - scripts/compile.sh
+
+La compilation produit des `.class` dans `build/`.
+
+## Lancer l'ensemble des tests
+- Windows:
+  - scripts\\run_all.bat
+- Unix/macOS:
+  - scripts/run_all.sh
+
+Ces scripts:
+- compilent si nécessaire
+- se positionnent à la racine du dépôt (pushd ..)
+- lancent la classe `AllTests`
+- retournent un code de sortie 0 si tous les tests passent
+
+## Autres exécutions
+- Lancer uniquement DBConfigTest:
+  - Windows: `scripts\\test_dbconfig.bat`
+- Lancer l'appli (si présente):
+  - Windows: `scripts\\run.bat`
+  - Unix/macOS: `scripts/run.sh`
+
+## Dossiers importants
+- `BinData/` est créé à la racine du dépôt lors des tests (et non dans `scripts/`).
+- `config/` contient des exemples de configuration.
+- `tests/` contient les classes de test (main-based).
+
+## Dépannage
+- Si `java`/`javac` est introuvable, vérifiez le PATH/JAVA_HOME.
+- Si `BinData` apparaît dans `scripts/`, exécutez les scripts fournis (ils font un `pushd ..`).
+- Si des erreurs de redéfinition de classes apparaissent, vérifiez qu'il n'existe pas de doublons entre `src/` et `tests/`.# Guide de démarrage rapide - MiniSGBDR
 
 ## Installation rapide
 

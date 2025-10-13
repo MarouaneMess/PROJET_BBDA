@@ -1,4 +1,4 @@
-# Architecture du MiniSGBDR - TP1
+# Architecture du MiniSGBDR - TP1 à TP3
 
 ## Vue d'ensemble
 
@@ -41,22 +41,31 @@ DBConfig config = DBConfig.LoadDBConfigSimple("config.txt");
 - `handle*()` : Gestionnaires de commandes spécifiques
 
 ## Extensions futures
-
-### TP2 - Couche de stockage
+### TP2 - Couche de stockage (implémentée)
 ```
 Storage Layer
-├── PageManager      # Gestion des pages de données
-├── BufferManager    # Cache des pages en mémoire
-└── FileManager      # Accès aux fichiers sur disque
+├── DiskManager      # Fichiers BinData/Data{i}.bin + Data{i}.meta (bitmap persistant)
+├── PageId           # Identifiant logique (fileIdx,pageIdx)
+└── (File access)    # RandomAccessFile pour IO bas niveau
 ```
 
-### TP3 - Couche d'indexation
+Fonctionnalités clés:
+- Init/Finish: ouverture/fermeture, chargement/écriture des bitmaps `.meta`
+- AllocPage/DeallocPage: allocation/libération de pages
+- ReadPage/WritePage: IO de pages de taille `pagesize`
+- Gestion de la croissance jusqu’à `dm_maxfilecount`
+
+### TP3 - Buffer Manager (implémenté)
 ```
-Index Layer
-├── BPlusTree       # Arbre B+ pour les index
-├── IndexManager    # Gestion des index
-└── Catalog         # Métadonnées des tables
+Buffer Layer
+├── BufferManager    # Pool de frames, pinCount/dirty/lastTouch
+└── Policy: LRU/MRU  # Politique de remplacement configurable
 ```
+
+Fonctionnalités clés:
+- GetPage/FreePage: épingles/désépingles, marquage dirty
+- FlushBuffers: persistance des pages dirty via DiskManager
+- Remplacement `LRU`/`MRU` en évitant les frames épinglées
 
 ### TP4 - Couche de requêtes
 ```
@@ -66,7 +75,7 @@ Query Layer
 └── Executor        # Exécution des requêtes
 ```
 
-## Diagramme de flux
+## Diagramme de flux (simplifié)
 
 ```
 [Utilisateur]
@@ -81,17 +90,18 @@ Query Layer
 [Handlers]             [Configuration]
      |                       |
      v                       v
-[Future: Storage Layer]     [Future: Data Files]
+[Buffer Layer]              [Storage Files]
 ```
 
 ## Patterns utilisés
 
 1. **Command Pattern** : Pour les commandes utilisateur
 2. **Factory Pattern** : Pour le chargement de configuration
-3. **Singleton Pattern** : (Futur) Pour les managers globaux
+3. **Singleton Pattern** : (Potentiel futur) Pour des managers globaux
 
 ## Points d'extension
 
 1. **Nouveaux formats de config** : Étendre `DBConfig.LoadDBConfig()`
 2. **Nouvelles commandes** : Ajouter dans `processCommand()`
 3. **Nouveaux composants** : Intégrer via `DBConfig`
+4. **Nouvelles politiques** : Étendre `BufferManager` (ex. CLOCK)

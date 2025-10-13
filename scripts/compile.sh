@@ -19,8 +19,17 @@ if [ $? -ne 0 ]; then
         exit 1
 fi
 
-# Les tests sont maintenant dans src/ avec les autres classes
-# Pas besoin de compilation séparée
+echo "Compilation des tests (dossier tests)..."
+if [ -d ../tests ]; then
+    TESTS=$(find ../tests -maxdepth 1 -name "*.java")
+    if [ -n "$TESTS" ]; then
+        javac -cp "$BUILD_DIR" -d "$BUILD_DIR" $TESTS
+        if [ $? -ne 0 ]; then
+            echo "Erreur lors de la compilation des tests"
+            exit 1
+        fi
+    fi
+fi
 
 echo "Compilation terminée avec succès !"
 echo "Les fichiers compilés sont dans le dossier '../build'"
