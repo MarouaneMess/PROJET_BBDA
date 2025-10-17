@@ -22,8 +22,12 @@ PROJET_BBDA/
 │   ├── DBConfig.java       # Classe de configuration (TP1/TP3)
 │   ├── DiskManager.java    # Gestionnaire disque + persistance .meta (TP2)
 │   ├── BufferManager.java  # Gestionnaire de buffers LRU/MRU (TP3)
+│   ├── MiniSGBDR.java      # Application principale (console)    
 │   ├── PageId.java         # Identifiant de page (fileIdx,pageIdx)
-│   └── MiniSGBDR.java      # Application principale (console)
+│   ├── Relation.java       # Gestion d'une relation / schéma (TP4)
+│   ├── Record.java         # Représentation d'un tuple (TP4)
+│   ├── ColumnInfo.java     # Métadonnées d'une colonne (TP4)
+│   └── ColumnType.java     # Enum des types (INT/FLOAT/CHAR/VARCHAR) (TP4)
 ├── tests/                  # Tests (exécutables via AllTests)
 │   ├── DBConfigTest.java
 │   ├── DiskManagerTests.java
@@ -222,6 +226,28 @@ Ce projet évoluera au fil des TPs pour inclure :
 ### TP3 - Buffer Manager
 - Gestion d’un pool de buffers en mémoire avec politiques `LRU` et `MRU`
 - Écriture différée via `FlushBuffers` et gestion des pages « dirty »
+
+### TP4 - Gestion des relations et des records (nouveau)
+- Introduit les classes `Relation`, `Record`, `ColumnInfo` et `ColumnType`.
+- La `Relation` contient le schéma (nom, colonnes, types, tailles) et fournit
+	des méthodes pour sérialiser/désérialiser un `Record` dans un buffer.
+- Les types supportés : `INT` (4 octets), `FLOAT` (4 octets), `CHAR(T)` (T octets
+	fixes), `VARCHAR(T)` (taille variable, encodée selon la stratégie discutée en CM
+	; stockée sur une taille fixe au niveau du record en respectant la taille maximale T).
+
+Stockage des records :
+- Format à taille fixe par relation. Chaque colonne occupe un nombre fixe d'octets
+	déterminé par son type et (pour CHAR/VARCHAR) par la taille T.
+- `writeRecordToBuffer(record, buff, pos)` : sérialise un `Record` dans le
+	`ByteBuffer` `buff` à la position `pos` (utilisez les méthodes `putInt`,
+	`putFloat`, `put`, et manipulez la position du buffer si nécessaire).
+- `readRecordFromBuffer(record, buff, pos)` : lit depuis `buff` à `pos` et
+	remplit la liste de valeurs du `Record` (opération inverse de l'écriture).
+
+Tests TP4 :
+- Vérifier qu'un `Record` écrit puis relu conserve exactement les valeurs
+	(notamment chaînes CHAR/VARCHAR, et conversion int/float depuis chaînes si
+	nécessaire).
 
 ## Problèmes connus
 
