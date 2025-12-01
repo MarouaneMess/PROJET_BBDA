@@ -99,7 +99,7 @@ public class DiskManager {
 
     /**
      * Alloue une page : réutilise une page libre si disponible sinon ajoute une page dans un fichier
-     */
+    */
     public PageId AllocPage() throws IOException {
         // 1) Réutiliser une page désallouée existante (parcourir fichiers existants)
         for (int i = 0; i < config.getDm_maxfilecount(); i++) {
