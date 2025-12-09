@@ -6,7 +6,8 @@ public class AllTests {
             "DBConfigTest",
             "DiskManagerTests",
             "BufferManagerTests",
-            "RelationRecordTests"
+            "RelationRecordTests",
+            "DBManagerTest",
         };
 
         
