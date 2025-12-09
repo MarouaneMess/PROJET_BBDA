@@ -33,6 +33,9 @@ public class BufferManager {
             frames[i].data = new byte[cfg.getPagesize()];
         }
     }
+    public DBConfig getConfig() {
+        return cfg;
+    }
 
     private Policy parsePolicy(String pol) {
         if (pol == null) return Policy.LRU;
